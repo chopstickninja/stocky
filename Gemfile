@@ -25,7 +25,10 @@ group :assets do
 end
 
 gem 'jquery-rails'
-
+gem 'compass-rails'
+gem 'zurb-foundation', '~> 4.0.0'
+gem 'bcrypt-ruby', :require => 'bcrypt'
+gem 'bcrypt-ruby', :require => 'bcrypt'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
