@@ -2,20 +2,18 @@ module ApplicationHelper
   require 'yql'
   require 'json'
 
-    yql = Yql::Client.new
-    yql.format = "json"
-
-    WHEN [AAPL] INCREASES BY .01 IN 1 DAY
-    WHEN [GOOG] INCREASES BY .05 IN 1 WEEK FOR 182 DAYS
-    =>
-    when ticker change by increment per duration for length
+    # WHEN [AAPL] INCREASES BY .01 IN 1 DAY
+    # WHEN [GOOG] INCREASES BY .05 IN 1 WEEK FOR 182 DAYS
+    # =>
+    # when ticker change by increment per duration for length
   
   class parser
 
     def get_prices(ticker, duration_examined)
+      yql = Yql::Client.new
+      yql.format = "json"
       daily_data = [[]] #daily prices IPO - now
       res = [0] #temp holder for year's prices
-
       endDate = DateTime.now
       query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
       query.select = 'date, Open, High, Low, Volume, Adj_close'
@@ -48,7 +46,7 @@ module ApplicationHelper
           days << DateTime.new(*end_d.split("-").map(&:to_i))
         end
       end
-      
+
       days
     end
   end
