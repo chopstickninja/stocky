@@ -4,4 +4,7 @@ Stocky::Application.routes.draw do
 
   resources :users, :only => [:create, :index, :new, :show]
   resource :session
+  
+  resources :algo_positions, :only => [:index]
+  resources :hist_prices, :only => [:index]
 end

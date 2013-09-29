@@ -11,7 +11,8 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130929175530) do
+
+ActiveRecord::Schema.define(:version => 20130929140815) do
 
   create_table "strategies", :force => true do |t|
     t.string   "query"
