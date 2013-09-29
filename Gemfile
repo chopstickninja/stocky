@@ -9,10 +9,8 @@ gem 'sqlite3'
 
 gem 'yql'
 
-<<<<<<< HEAD
+
 gem 'json'
-=======
->>>>>>> 1e7b3d73254e10f20a56b37c11527134ef6c7936
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -27,7 +25,10 @@ group :assets do
 end
 
 gem 'jquery-rails'
-
+gem 'compass-rails'
+gem 'zurb-foundation', '~> 4.0.0'
+gem 'bcrypt-ruby', :require => 'bcrypt'
+gem 'bcrypt-ruby', :require => 'bcrypt'
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
