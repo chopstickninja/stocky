@@ -12,28 +12,32 @@ class Parser
   end
 
   def self.get_prices(ticker, duration_examined)
-    yql = Yql::Client.new
-    yql.format = "json"
-    daily_data = [] #daily prices IPO - now
-    res = [0] #temp holder for year's prices
-    endDate = DateTime.now
-    query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
-    query.select = 'date, Open, High, Low, Volume, Adj_close'
-    yql.query = query
-    
-    duration_examined.times do
-      break if res.length == 0
-      startDate = endDate - 1.year
-      query.conditions = { 
-        :symbol => ticker, 
-        :startDate => "#{startDate.year}-#{startDate.month}-#{startDate.day}", 
-        :endDate => "#{endDate.year}-#{endDate.month}-#{endDate.day}" 
-      }
-      res = JSON.parse(yql.get.show)["query"]["results"]["quote"]
-      daily_data += res
-      endDate = endDate - 1.year
+    if @stock_data[ticker]
+      return @stock_data[ticker]
+    else
+      yql = Yql::Client.new
+      yql.format = "json"
+      daily_data = [] #daily prices IPO - now
+      res = [0] #temp holder for year's prices
+      endDate = DateTime.now
+      query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
+      query.select = 'date, Open, High, Low, Volume, Adj_close'
+      yql.query = query
+      
+      @duration_examined.times do
+        break if res.length == 0
+        startDate = endDate - 1.year
+        query.conditions = { 
+          :symbol => ticker, 
+          :startDate => "#{startDate.year}-#{startDate.month}-#{startDate.day}", 
+          :endDate => "#{endDate.year}-#{endDate.month}-#{endDate.day}" 
+        }
+        res = JSON.parse(yql.get.show)["query"]["results"]["quote"]
+        daily_data += res
+        endDate = endDate - 1.year
+      end
+      @stock_data[ticker] = daily_data.reverse
     end
-    daily_data.reverse
   end
 
   def self.find_ranges(ticker, change, duration, duration_examined, length = 1)
