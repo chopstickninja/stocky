@@ -50,8 +50,7 @@ $(document).foundation();
               tablestring +='<tr>'
               tablestring += '<td>' + json_data[i].date + '</td>'
               tablestring += '<td>' + json_data[i].price + '</td>'
-              tablestring += '<td>' + json_data[i].volume + '</td>'
-              tablestring += '<td>' + json_data[i].pv + '</td>'
+              tablestring += '<td>' + json_data[i].buyorsell + '</td>'
               tablestring+= '</tr>'
             }
             
@@ -66,12 +65,19 @@ $(document).foundation();
         type: "GET",
         success: function(response){
           var points = response;
+          var leng = parseInt(points.length/12)
           var dates = [];
           var prices = [];
-          for(var i =0; i < points.length; i++){
+          var i = 0;
+          while (i < points.length){
             dates.push(points[i].date);
             prices.push(points[i].price);
+            i += leng
           }
+          // for(var i =0; i < points.length; i++){
+          //   dates.push(points[i].date);
+          //   prices.push(points[i].price);
+          // }
           prices[0] = {y: prices[0], marker: { fillColor: 'red', radius: 6 } }
           prices[prices.length - 1] = {y: prices[prices.length - 1], marker: { fillColor: 'red', radius: 6 } }
           $('#container').highcharts({
@@ -84,7 +90,6 @@ $(document).foundation();
               series: [{
                   data: prices,
                   step: false,
-                  name: 'AAPL'
               }]
 
           });
