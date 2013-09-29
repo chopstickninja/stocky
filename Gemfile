@@ -9,11 +9,9 @@ gem 'sqlite3'
 
 gem 'yql'
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 9c67f8242581b6c2bf0713d70cc40d2a67549dba
 gem 'json'
+
+gem 'holidays'
 
 # Gems used only for assets and not required
 # in production environments by default.
