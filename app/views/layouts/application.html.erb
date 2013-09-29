@@ -21,6 +21,28 @@
   </head>
 
   <body id="bodycontainer">
+<% if current_user %>
+    <nav class="top-bar hide-for-small" style="background-color: #517fa4; height: 50px; ">
+  <ul class="title-area">
+    <!-- Title Area -->
+    <li class="name">
+        <h1>
+          <a href="<%= users_url %>" style="font-size: 24px;">
+              Stocktastic
+          </a>
+        </h1>
+    </li>
+  </ul>
+
+  <section class="top-bar-section" style="left: 0%;">
+    <!-- Right Nav Section -->
+    <ul class="right">
+       <li class=""><a href="<%= user_url(current_user) %>" style="background-color: #517fa4; font-size: 14px;">My Strategies</a></li>
+      <li class=""><a href="#" style="background-color: #517fa4; font-size: 14px;">Documentation</a></li>
+    </ul>
+  </section>
+</nav>
+<% end %>
 
     <%= yield %>
 

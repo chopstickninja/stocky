@@ -10,7 +10,10 @@ class StrategiesController < ApplicationController
   end
   
   def create
-    
+    p params[:strategy]
+    @category = Strategy.new(params[:strategy])
+    @category.save!
+    head :ok
   end
   
   def update
