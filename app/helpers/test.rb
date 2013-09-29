@@ -36,7 +36,7 @@ class Parser
     daily_data.reverse
   end
 
-  def self.find_ranges(ticker, change, duration, duration_examined, length = 0)
+  def self.find_ranges(ticker, change, duration, duration_examined, length = 1)
     days = [] #days that trigger entry signal
     daily_data = get_prices(ticker, duration_examined)
     decrease = change < 0 ? true : false
@@ -54,18 +54,32 @@ class Parser
       end
     end
 
-    if length != 0
-      (days.length - 1).times do |idx1|
-        start = days[idx1]["date"]
-        start_date = DateTime.new(*start.split("-").map(&:to_i))
-        length.times do |idx2|
-          end_d = days[idx1 + 1 + idx2]["date"]
-
-          end_date = DateTime.new(*end_d.split("-").map(&:to_i))
-
+    if length > 1
+      successive_days = []
+      (days.length - 1).times do |idx|
+        start = days[idx]["date"]
+        count = 0
+        end_d = days[idx + 1 + count]["date"]
+        while self.get_successive_days(start, end_d, duration) &&
+          count < length
+          count += 1
+          end_d = days[idx + 1 + count]["date"]
+        end
+        successive_days << days[idx] if count == length - 1
+      end
+      return successive_days
     end
-
     days
+  end
+
+  def self.get_successive_days(start_d, end_d, duration)
+    # look through each day in days. if hit a string
+    # of length successive days spaced by duration,
+    # extract that part and return
+    start_date = DateTime.new(*start_d.split("-").map(&:to_i))
+    end_date = DateTime.new(*end_d.split("-").map(&:to_i))
+    return true if end_date - start_date == duration
+    false
   end
 
   # (queries array, callback dates array, max open trades)
