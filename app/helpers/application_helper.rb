@@ -12,7 +12,7 @@ module ApplicationHelper
     ACTION =/buy|sell/i
     IN_PER= /(?:IN|PER) #{NUM_WITH_UNIT}(?: FOR #{NUM_WITH_UNIT})?/i
     COND_REGEX = /(?:when|or) (#{TICKER}(?: or #{TICKER})*) (#{CHANGE}) by #{PERCENTAGE} #{IN_PER} /i
-    DO_REGEX = /(?:use #{PERCENTAGE} of (portfolio|free cash) to (#{ACTION}) (#{TICKER})|(exit))/i
+    DO_REGEX = /(?:use #{PERCENTAGE} of (portfolio|cash) to (#{ACTION}) (#{TICKER})|(exit))/i
     QUERY_REGEX = /#{COND_REGEX}+#{DO_REGEX}/i
 
     def initialize(entry_query, exit_query, duration_examined, max_open_trades)
