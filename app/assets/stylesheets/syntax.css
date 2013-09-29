@@ -1,35 +1,55 @@
 div#queryBox {
   position:absolute;
-  top:30px;
-  left:10px;
+  top: 10px;
+  left:20px;
+  border: solid black 1px;
+  width: 96%;
+  height: 30px;
+  padding-top: 5px;
+  padding-left: 5px;
+  background: white;
+  border: 1px solid #cccccc;
   opacity: 0;
-  width: 400px;
 }
 
 div#highlight {
   position:absolute;
-  top:30px;
-  left:10px;
+  top: 10px;
+  left:20px;
   border: solid black 1px;
-  width: 400px;
-  height: 20px;
+  width: 96%;
+  height: 30px;
+  padding-top: 5px;
+  padding-left: 5px;
+  background: white;
+  border: 1px solid #cccccc;
 }
 
 div#exitBox {
   position:absolute;
-  top:60px;
-  left:10px;
+  top: 30px;
+  left:20px;
+  border: solid black 1px;
+  width: 96%;
+  height: 30px;
+  padding-top: 5px;
+  padding-left: 5px;
+  background: white;
+  border: 1px solid #cccccc;
   opacity: 0;
-  width: 400px;
 }
 
 div#highlightExit {
   position:absolute;
-  top:60px;
-  left:10px;
+  top: 30px;
+  left:20px;
   border: solid black 1px;
-  width: 400px;
-  height: 20px;
+  width: 96%;
+  height: 30px;
+  padding-top: 5px;
+  padding-left: 5px;
+  background: white;
+  border: 1px solid #cccccc;
 }
 
 

@@ -4,9 +4,9 @@ $(document).ready(function(){
   
   var highlight = function() {
     var queryBox = document.getElementById("queryBox");
-    
-    var queryText = $(queryBox).text();
-    var queryArr = queryText.split(" ");
+      var queryText = $(queryBox).text();
+      var queryArr = queryText.split(" ");
+
 
     console.log(queryText);
     console.log(queryArr);
