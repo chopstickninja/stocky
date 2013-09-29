@@ -118,7 +118,7 @@ module ApplicationHelper
       res = [0] #temp holder for year's prices
       endDate = DateTime.now
       query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
-      query.select = 'date, Open, High, Low, Volume, Adj_close'
+      query.select = 'date, Open, High, Low, Volume, Adj_Close'
       yql.query = query
       
       @duration_examined.times do
@@ -130,7 +130,11 @@ module ApplicationHelper
           :endDate => "#{endDate.year}-#{endDate.month}-#{endDate.day}" 
         }
         res = JSON.parse(yql.get.show)["query"]["results"]["quote"]
-        daily_data += res
+        res.each do |day_data|
+          date = day_data.delete("date")
+          daily_data[ticker][date] = day_data
+        end
+
         endDate = endDate - 1.year
       end
       @stock_data[ticker] = daily_data.reverse
@@ -156,7 +160,7 @@ module ApplicationHelper
 
     if length > 1
       successive_days = []
-      (days.length - 1).times do |idx|
+      (days.count - 1).times do |idx|
         start = days[idx]
         count = 0
         end_d = days[idx + 1 + count]
