@@ -68,6 +68,7 @@ module ApplicationHelper
     end
 
     def execute_query
+      trade_data = {}
       start_dates = []
       @entry[:tickers].each do |ticker|
         start_dates += find_ranges(ticker, @entry[:cond_percentage], @entry[:cond_days1])
@@ -81,12 +82,31 @@ module ApplicationHelper
 
       if @exit[:exit]
         end_trade = {ticker: @exit[:act_ticker], exit_all: true}
-        trades = select_made_trades(start_dates, end_dates, true)
+        trade_dates = select_made_trades(start_dates, end_dates, true)
       else
         end_trade = {ticker: @exit[:act_ticker], source_of_funds: @exit[:source_of_funds], act_percentage: @exit[:act_percentage]}
-        trades = make_trades(select_made_trades(start_dates, end_dates), start_trade, end_trade)
+        trade_dates = make_trades(select_made_trades(start_dates, end_dates), start_trade, end_trade)
       end
-      trades
+      debugger
+      trade_dates.first.each_with_index do |trade_date, idx|
+        child = trade_data[idx] = {}
+        child["action"] = "buy"
+        child["date"] = trade_date
+        @stock_data[@exit[:tickers].first][trade_date].each do |key, val|
+      # debugger
+          child[key] = val
+        end
+      end
+      trade_dates.last.each_with_index do |trade_date, idx|
+        child = trade_data[idx+trade_dates.first.length] = {}
+        child["action"] = "sell"
+        child["date"] = trade_date
+        @stock_data[@exit[:tickers].first][trade_date].each do |key, val|
+      # debugger
+          child[key] = val
+        end
+      end
+      trade_data
     end
 
     def make_trades(trades, start_trade, end_trade)      
@@ -119,7 +139,6 @@ module ApplicationHelper
     def select_made_trades(start_dates, end_dates, exit_all_bool=false)
       open_trades = 0
       trade_dates = (start_dates + end_dates).sort.uniq
-      debugger
       entries = []
       exits = []
       trade_dates.each do |trade_date|
