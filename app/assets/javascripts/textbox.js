@@ -3,7 +3,6 @@ $(document).ready(function(){
   KEYWORDS = ["when", "increases", "decreases", "use", "portfolio", "for", "cash"];
   
   var highlight = function() {
-    
     var queryBox = document.getElementById("queryBox");
     
     var queryText = $(queryBox).text();
@@ -41,30 +40,31 @@ $(document).ready(function(){
   
   var isSymbol = function(str) {
     return str.toUpperCase() == str;
-  }
+  };
   
   
+  if (document.getElementById("queryBox")) {
+    $(queryBox).keyup(function(event){
+      if (event.keyCode == 13) {
+        var queryStr = $(queryBox).text();
+        debugger
+        $.ajax({
+          url: "",
+          type: "GET",
+          data: {query: queryStr},
+          success: function(response){
+            // Write your call back here, also fill out the url
+          }
+        });
+      }  
+      else {
+        highlight();
+        console.log("changed");      
+      }
+    });
   
-  $(queryBox).keyup(function(event){
-    if (event.keyCode == 13) {
-      var queryStr = $(queryBox).text();
-      debugger
-      $.ajax({
-        url: "",
-        type: "GET",
-        data: {query: queryStr},
-        success: function(response){
-          // Write your call back here, also fill out the url
-        }
-      });
-    }  
-    else {
-      highlight();
-      console.log("changed");      
-    }
-  });
-  
-  highlight();
-  // console.log("ready!");
+    highlight();
+    // console.log("ready!");
+  };
   
 });
