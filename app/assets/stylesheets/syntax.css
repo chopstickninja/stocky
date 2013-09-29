@@ -27,7 +27,7 @@ div#highlight {
 
 div#exitBox {
   position:absolute;
-  top: 30px;
+  top: 50px;
   left:20px;
   border: solid black 1px;
   width: 96%;
@@ -41,7 +41,7 @@ div#exitBox {
 
 div#highlightExit {
   position:absolute;
-  top: 30px;
+  top: 50px;
   left:20px;
   border: solid black 1px;
   width: 96%;
