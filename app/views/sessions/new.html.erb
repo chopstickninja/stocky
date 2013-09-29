@@ -1,0 +1,14 @@
+<form action="<%= session_url %>" method="POST">
+    <div class="row" style=" padding-top: 10%;">
+      <div class="panel large-4 push-4 columns" style="background: #F5F8FF;">
+        <h3>Sign In</h3>
+        <input type="text" name="user[username]" placeholder="Username">
+        <input type="password" name="user[password]" placeholder="Password">
+         <input name="authenticity_token" type="hidden" value="<%= form_authenticity_token %>">
+        <input type="submit" class="small button large-12" style="float:right;">
+      </div>
+    </div>
+
+    
+
+</form>

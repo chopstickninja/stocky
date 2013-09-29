@@ -7,7 +7,7 @@ module ApplicationHelper
     # =>
     # when ticker change by increment per duration for length
   
-  class parser
+  class Parser
 
     def get_prices(ticker, duration_examined)
       yql = Yql::Client.new
