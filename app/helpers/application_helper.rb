@@ -1,4 +1,3 @@
-
 require 'yql'
 require 'json'
 
