@@ -18,6 +18,7 @@ module ApplicationHelper
       @exit = generate_trade_hash(exit_query)
       @duration_examined = duration_examined
       @max_open_trades = max_open_trades
+      @portfolio = 100000
     end
 
 
@@ -74,7 +75,7 @@ module ApplicationHelper
     end
 
 
-    def execute_query#(start_dates, start_trade, end_dates, end_trade, portfolio = 10000)
+    def execute_query
       start_dates = []
       @entry[:tickers].each do |ticker|
         start_dates += find_ranges(ticker, @entry[:cond_percentage], @entry[:cond_days1], @entry[:cond_days2])
@@ -99,8 +100,39 @@ module ApplicationHelper
     def make_trades(trades, start_trade, end_trade)      
       start_trades = trades[0].dup
       end_trades = trades[1].dup
+      trade_history = []
+      holdings = []
       until start_trades.empty? && end_trades.empty?
-        if start_trade > end_trade
+        if start_trades.empty? || start_trades[0] >= end_trades[0]
+          date = end_trades.shift
+          price = @stock_data[end_trade[:ticker]][date]['Adj_Close']
+          holdings_value = holdings.inject(0) { |trade| trade[:volume] * price }
+          if end_trade[:exit_all] && !holdings.empty?
+            holdings = []
+            @portfolio += holdings_value
+          elsif !holdings.empty?
+            cash_to_spend = start_trade[:source_of_funds] == "portfolio" ? holdings_value * start_trade[:act_percentage] : @portfolio * start_trade[:act_percentage] 
+            volume = (cash_to_spend / price).to_i
+            @portfolio -= volume * price
+            holdings << { volume: volume }
+            trade_history << { volume: volume, bought_at: price}
+          end
+        elsif end_trades.empty? || end_trades[0] >= start_trades[0]
+          date = start_trades.shift
+          price = @stock_data[start_trade[:ticker]][date]['Adj_Close']
+          holdings_value = holdings.inject(0) { |trade| trade[:volume] * price }
+          cash_to_spend = start_trade[:source_of_funds] == "portfolio" ? holdings_value * start_trade[:act_percentage] : @portfolio * start_trade[:act_percentage] 
+          volume = (cash_to_spend / price).to_i
+          @portfolio -= volume * price
+          holdings << { volume: volume }
+          trade_history << { volume: volume, bought_at: price}
+        end
+        holdings
+      end
+
+
+
+          
     end
 
     def select_made_trades(start_dates, end_dates, exit_all_bool=false)
