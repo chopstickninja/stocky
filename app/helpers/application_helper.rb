@@ -1,4 +1,3 @@
-
 require 'yql'
 require 'json'
 
@@ -254,6 +253,5 @@ module ApplicationHelper
       return true if end_date - start_date == duration
       false
     end
-  end
   end
 end
