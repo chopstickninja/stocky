@@ -1,5 +1,6 @@
 require 'yql'
 require 'json'
+require 'debugger'
 
 module ApplicationHelper
 
@@ -31,22 +32,12 @@ module ApplicationHelper
                                   source_of_funds, act_direction, act_ticker, exit|
         tickers = tickers.split(/ or /)
         cond_direction = cond_direction == "increases" ? 1 : -1
-        cond_percentage = cond_percentage * 0.01 * cond_direction
+        cond_percentage = cond_percentage.to_i * 0.01 * cond_direction
 
       
         cond_unit1 = cond_unit1[0..-2] if cond_unit1[-1] == "s"
-        cond_unit2 = cond_unit2[0..-2] if cond_unit2[-1] == "s"
         
         multiplier_unit1 = case cond_unit1
-        when "day"
-          1
-        when "month"
-          30
-        when "year"
-          365
-        end
-
-        multiplier_unit2 = case cond_unit2
         when "day"
           1
         when "month"
@@ -64,8 +55,7 @@ module ApplicationHelper
         output = {}
         output[:tickers] = tickers
         output[:cond_percentage] = cond_percentage
-        output[:cond_days1] = multiplier_unit1 * cond_num1
-        output[:cond_days2] = multiplier_unit2 * cond_num2
+        output[:cond_days1] = multiplier_unit1 * cond_num1.to_i
         if exit
           output[:exit] = true
         end
@@ -80,13 +70,13 @@ module ApplicationHelper
     def execute_query
       start_dates = []
       @entry[:tickers].each do |ticker|
-        start_dates += find_ranges(ticker, @entry[:cond_percentage], @entry[:cond_days1], @entry[:cond_days2])
+        start_dates += find_ranges(ticker, @entry[:cond_percentage], @entry[:cond_days1])
       end
       start_trade = {ticker: @entry[:act_ticker], source_of_funds: @entry[:source_of_funds], act_percentage: @entry[:act_percentage]}
 
       end_dates = []
       @exit[:tickers].each do |ticker|
-        end_dates += find_ranges(ticker, @exit[:cond_percentage], @exit[:cond_days1], @exit[:cond_days2])
+        end_dates += find_ranges(ticker, @exit[:cond_percentage], @exit[:cond_days1])
       end
 
       if @exit[:exit]
@@ -129,18 +119,17 @@ module ApplicationHelper
     def select_made_trades(start_dates, end_dates, exit_all_bool=false)
       open_trades = 0
       trade_dates = (start_dates + end_dates).sort.uniq
+      debugger
       entries = []
       exits = []
       trade_dates.each do |trade_date|
-        if @max_open_trades >= open_trades && start_dates.include?(trade_date)
+        if @max_open_trades > open_trades && start_dates.include?(trade_date)
           open_trades += 1
           entries << trade_date
         end
-        if open_trade > 0 && end_date.include?(trade_date)
+        if open_trades > 0 && end_dates.include?(trade_date)
           if exit_all_bool
             open_trades = 0
-          else
-            open_trades -=1
           end
           exits << trade_date
         end
@@ -149,12 +138,12 @@ module ApplicationHelper
     end
 
     def get_prices(ticker)
-      if @stock_data[ticker]
+      unless @stock_data[ticker].empty?
         if @stock_data[ticker].keys.count > 250 * @duration_examined
           return @stock_data[ticker]
         end
       else
-        @stock_data[ticker] = {}
+        @stock_data[ticker] ||= {}
         yql = Yql::Client.new
         yql.format = "json"
         daily_data = [] #daily prices IPO - now
@@ -186,8 +175,10 @@ module ApplicationHelper
 
     def find_ranges(ticker, change, duration, length = 1)
       days = [] #days that trigger entry signal
+      @stock_data ||= {}
+      @stock_data[ticker] ||= {}
       daily_data = @stock_data[ticker]
-      unless @stock_data[ticker].keys.count > 250 * @duration_examined
+      unless daily_data.keys.count > 250 * @duration_examined
         get_prices(ticker)
       end
 
