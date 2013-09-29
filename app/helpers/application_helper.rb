@@ -1,3 +1,4 @@
+
 require 'yql'
 require 'json'
 
@@ -33,15 +34,10 @@ module ApplicationHelper
         cond_direction = cond_direction == "increases" ? 1 : -1
         cond_percentage = cond_percentage * 0.01 * cond_direction
 
-  require 'yql'
-  require 'json'
-
     # WHEN [AAPL] INCREASES BY .01 IN 1 DAY
     # WHEN [GOOG] INCREASES BY .05 IN 1 WEEK FOR 182 DAYS
     # =>
     # when ticker change by increment per duration for length
-  
-  class Parser
 
     def get_prices(ticker, duration_examined)
       yql = Yql::Client.new
