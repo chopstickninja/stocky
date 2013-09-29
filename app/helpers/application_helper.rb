@@ -34,21 +34,6 @@ module ApplicationHelper
         cond_direction = cond_direction == "increases" ? 1 : -1
         cond_percentage = cond_percentage * 0.01 * cond_direction
 
-    # WHEN [AAPL] INCREASES BY .01 IN 1 DAY
-    # WHEN [GOOG] INCREASES BY .05 IN 1 WEEK FOR 182 DAYS
-    # =>
-    # when ticker change by increment per duration for length
-
-    def get_prices(ticker, duration_examined)
-      yql = Yql::Client.new
-      yql.format = "json"
-      daily_data = [[]] #daily prices IPO - now
-      res = [0] #temp holder for year's prices
-      endDate = DateTime.now
-      query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
-      query.select = 'date, Open, High, Low, Volume, Adj_close'
-      yql.query = query
-
       
         cond_unit1 = cond_unit1[0..-2] if cond_unit1[-1] == "s"
         cond_unit2 = cond_unit2[0..-2] if cond_unit2[-1] == "s"
@@ -70,6 +55,7 @@ module ApplicationHelper
         when "year"
           365
         end
+
         unless exit
           act_direction = act_direction == "buy" ? 1 : -1
           act_percentage = act_percentage * 0.01
@@ -93,6 +79,18 @@ module ApplicationHelper
     end
 
 
+    def get_prices(ticker, duration_examined)
+      yql = Yql::Client.new
+      yql.format = "json"
+      daily_data = [[]] #daily prices IPO - now
+      res = [0] #temp holder for year's prices
+      endDate = DateTime.now
+      query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
+      query.select = 'date, Open, High, Low, Volume, Adj_close'
+      yql.query = query
+    end
+
+
     def execute_query
       start_dates = []
       @entry[:tickers].each do |ticker|
@@ -112,7 +110,7 @@ module ApplicationHelper
         end_trade = {ticker: @exit[:act_ticker], source_of_funds: @exit[:source_of_funds], act_percentage: @exit[:act_percentage]}
         trades = make_trades(select_made_trades(start_dates, end_dates), start_trade, end_trade)
       end
-
+      trades
     end
 
     def make_trades(trades, start_trade, end_trade)      
@@ -121,20 +119,12 @@ module ApplicationHelper
       trade_history = []
       holdings = []
       until start_trades.empty? && end_trades.empty?
-        if start_trades.empty? || start_trades[0] >= end_trades[0]
+        if (start_trades.empty? || start_trades[0] >= end_trades[0]) && !holdings.empty?
           date = end_trades.shift
           price = @stock_data[end_trade[:ticker]][date]['Adj_Close']
           holdings_value = holdings.inject(0) { |trade| trade[:volume] * price }
-          if end_trade[:exit_all] && !holdings.empty?
-            holdings = []
-            @portfolio += holdings_value
-          elsif !holdings.empty?
-            cash_to_spend = start_trade[:source_of_funds] == "portfolio" ? holdings_value * start_trade[:act_percentage] : @portfolio * start_trade[:act_percentage] 
-            volume = (cash_to_spend / price).to_i
-            @portfolio -= volume * price
-            holdings << { volume: volume }
-            trade_history << { volume: volume, bought_at: price}
-          end
+          holdings = []
+          @portfolio += holdings_value
         elsif end_trades.empty? || end_trades[0] >= start_trades[0]
           date = start_trades.shift
           price = @stock_data[start_trade[:ticker]][date]['Adj_Close']
@@ -143,14 +133,11 @@ module ApplicationHelper
           volume = (cash_to_spend / price).to_i
           @portfolio -= volume * price
           holdings << { volume: volume }
-          trade_history << { volume: volume, bought_at: price}
+          trade_history << { date: date, volume: volume, price: price}
         end
-        holdings
       end
-
-
-
-          
+      holdings_value = holdings.inject(0) { |trade| trade[:volume] * price }
+      [holdings_value + @portfolio, trade_history]          
     end
 
     def select_made_trades(start_dates, end_dates, exit_all_bool=false)
