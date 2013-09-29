@@ -1,0 +1,29 @@
+There are 3 types of animals in the financial world:
+
+Bulls who make money when stocks go up,
+
+Bears who make money when stocks go down,
+
+and Pigs who get slaughtered. 
+
+Why do pigs get slaughtered? They neither have the insider knowledgenedding  to make profitable trades nor the coding ability to make the trading algorithim that would dissassociate themselves emotionally from the trade.
+
+That's where we come in. My team and I have built the next greatest tool to democratize stock trading. 
+
+We are Stocktastic; Stock trading for the rest of us.
+
+Stocktastic is a light-weight platform made to give the average user the tools needed to compete with the titans of wallstreet.
+
+Stockastic allows you to describe a simple trading strategy in readable english, say "WHEN YHOO increases by 3% in 1 day use 4% of portfolio to buy YHOO", followed by an exit strategy, or for you javascript developers out there a callback "WHEN YHOO increases by 3% in 1 day OR YHOO decreases by 3% in 1 day exit". 
+
+As you can tell no coding knowledge is needed to understand the text. Syntax hilighting guides the user in how to write the query so the entire process is painless. 
+
+Our text parser does all the work in the backend making calls to the YQL yahoo finance table to detect when you would have made your buys and sells and displays it to you in an easy to read and simple format. Lovely, no?
+
+If you are satisfied with how your strategy performed in the past, you can save the query to your account and your friends can see how your strategies perform in the future.
+
+The potential for this product is nearly infinite. The light-weight users will love the sand-box that allows them to test their intuitions while the heavy-weight users will love the customizability of the querying language.
+
+Today those who can code can trade smart. Tomorrow, anyone who can think can trade smart.
+
+Thank you.
