@@ -1,14 +1,16 @@
 <div class="row">
 	<div class="large-12">
-		<div class="panel" style="margin-top: 25px; position: relative; height:80px; background: #C3D0EB;">
+		<div class="panel" style="margin-top: 25px; position: relative; height:130px; background: #C3D0EB;">
 			
 			<div id="highlight"></div>
 
-	<div contenteditable="true" id="queryBox">when increase decrease use portfolio for</div>
+	<div contenteditable="true" id="queryBox"></div>
 
   <div id="highlightExit"></div>
 
-  <div contenteditable="true" id="exitBox">when increase decrease use portfolio for</div>
+  <div contenteditable="true" id="exitBox"></div>
+	
+	<a href="#" class="small button large-3" style="float:right; position: absolute; top:90px; right: 10px" id="executeStrategy" data-id="<%= current_user.id %>">Execute Query</a>
 
 
 		</div>
@@ -17,9 +19,9 @@
 <div class="row">
 	<div class="large-12">
 
-		<div class="panel" id="container" style="background: #C3D0EB;"></div>
+		<div class="panel" id="container" style="background: #C3D0EB;" hidden></div>
     </div>
-			<div class="panel" style="background: #C3D0EB;">
+			<div class="panel" style="background: #C3D0EB;" id="datatable" hidden>
 
         <a href="#" class="small button large-3" style="float:right;" id="addStrategy" data-id="<%= current_user.id %>">Add to Portfolio!</a>
 		<table style="width: 100%;">
@@ -31,7 +33,7 @@
       <th>Portfolio Value</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody id="tableBody">
     <tr>
       <td>09/28/13</td>
       <td>&#36;475.13</td>

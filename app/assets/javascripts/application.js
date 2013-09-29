@@ -18,20 +18,6 @@
 $(document).foundation();
 
  $(function () {
-    $('#container').highcharts({
-        title: {
-        	text: 'AAPL Historic Data'
-        },
-        xAxis: {
-            categories: ['9/27/13', '9/26/13','9/25/13', '9/24/13', '9/23/13', '9/20/13', '9/19/13', '9/18/13', '9/17/13', '9/16/13', '9/13/13']
-        },
-        series: [{
-            data: [482.75, {y: 486.4, marker: { fillColor: 'red', radius: 6 } }, 481.53, 489.1, 490.64, 467.41, 472.3, 464.68, 455.32, {y: 444.4, marker: { fillColor: 'red', radius: 6 } }, 464.9],
-            step: false,
-            name: 'AAPL'
-        }]
-
-    });
     $("#addStrategy").click(function(event) {
         event.preventDefault();
         var user_id = parseInt($(event.currentTarget).attr("data-id"));
@@ -48,4 +34,62 @@ $(document).foundation();
         }
       });
     });
+    
+    $("#executeStrategy").click(function(event){
+      event.preventDefault();
+      $.ajax({
+          url: "/algo_positions/",
+          type: "GET",
+          success: function(response){
+            buildChart();
+            var json_data = response;
+            $('#container').removeAttr("hidden");
+             $('#datatable').removeAttr("hidden");
+            var tablestring = "";
+            for(var i=0; i < json_data.length; i++){
+              tablestring +='<tr>'
+              tablestring += '<td>' + json_data[i].date + '</td>'
+              tablestring += '<td>' + json_data[i].price + '</td>'
+              tablestring += '<td>' + json_data[i].volume + '</td>'
+              tablestring += '<td>' + json_data[i].pv + '</td>'
+              tablestring+= '</tr>'
+            }
+            
+            $('#tableBody').html(tablestring);
+            }
+      });
+    });
+    
+    var buildChart = function(){
+      $.ajax({
+        url: "/hist_prices/",
+        type: "GET",
+        success: function(response){
+          var points = response;
+          var dates = [];
+          var prices = [];
+          for(var i =0; i < points.length; i++){
+            dates.push(points[i].date);
+            prices.push(points[i].price);
+          }
+          prices[0] = {y: prices[0], marker: { fillColor: 'red', radius: 6 } }
+          prices[prices.length - 1] = {y: prices[prices.length - 1], marker: { fillColor: 'red', radius: 6 } }
+          $('#container').highcharts({
+              title: {
+              	text: 'YHOO Historic Data'
+              },
+              xAxis: {
+                  categories: dates
+              },
+              series: [{
+                  data: prices,
+                  step: false,
+                  name: 'AAPL'
+              }]
+
+          });
+        }
+      });
+    };
+
 });

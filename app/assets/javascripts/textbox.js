@@ -7,9 +7,9 @@ $(document).ready(function(){
       var queryText = $(queryBox).text();
       var queryArr = queryText.split(" ");
 
-
-    console.log(queryText);
-    console.log(queryArr);
+    // 
+    // console.log(queryText);
+    // console.log(queryArr);
     
     var highlightedQuery = "";
     queryArr.forEach(function(el){
@@ -37,8 +37,8 @@ $(document).ready(function(){
     var exitText = $(exitBox).text();
     var exitArr = exitText.split(" ");
 
-    console.log(exitText);
-    console.log(exitArr);
+    // console.log(exitText);
+//     console.log(exitArr);
     
     var highlightedExit = "";
     exitArr.forEach(function(el){
