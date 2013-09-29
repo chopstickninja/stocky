@@ -15,8 +15,10 @@ class Parser
   end
 
   def get_prices(ticker)
-    if @stock_data[ticker].keys.count > 250 * @duration_examined
-      return @stock_data[ticker]
+    if @stock_data[ticker]
+      if @stock_data[ticker].keys.count > 250 * @duration_examined
+        return @stock_data[ticker]
+      end
     else
       @stock_data[ticker] = {}
       yql = Yql::Client.new
@@ -46,48 +48,53 @@ class Parser
         endDate = endDate - 1.year
       end
     end
-    @stock_data[ticker].sort{ |day1, day2| day1.first <=> day2.first }
   end
 
   def find_ranges(ticker, change, duration, length = 1)
     days = [] #days that trigger entry signal
+    daily_data = @stock_data[ticker]
     unless @stock_data[ticker].keys.count > 250 * @duration_examined
       get_prices(ticker)
     end
 
     decrease = change < 0 ? true : false
+
+    sorted_keys = daily_data.keys.sort
     
-    @stock_data[ticker].each_with_index do |day_data, idx|
-      start = day_data
-      end_d = daily_data[idx + duration - 1]
+    sorted_keys.each_with_index do |day_string, idx|
+      start = daily_data[day_string]
+      end_d = daily_data[sorted_keys[idx + duration - 1]]
       break unless end_d
       max_incr = (end_d["High"].to_f - start["Low"].to_f) / end_d["High"].to_f
       max_decr = (end_d["Low"].to_f - start["High"].to_f) / end_d["Low"].to_f
 
       if decrease && max_decr <= change || !decrease && max_incr >= change
-        days << end_d["date"]
+        days << sorted_keys[idx + duration - 1]
       end
     end
 
-    if length > 1
-      successive_days = []
-      (days.count - 1).times do |idx|
-        start = days[idx]
-        count = 0
-        end_d = days[idx + 1 + count]
-        while self.get_successive_days(start, end_d, duration) &&
-          count < length
-          count += 1
-          end_d = days[idx + 1 + count]
-        end
-        successive_days << days[idx] if count == length - 1
-      end
-      return successive_days
-    end
+    # if length > 1
+    #   successive_days = []
+    #   # for each entry in days, look at it + the next LENGTH - 1
+    #   # entries. determine if they're each DURATION apart (in
+    #   # trading days)
+    #   (days.count - 1).times do |idx|
+    #     start = days[idx]
+    #     count = 0
+    #     end_d = days[idx + 1 + count]
+    #     while are_successive_days?(start, end_d, duration) &&
+    #       count < length
+    #       count += 1
+    #       end_d = days[idx + 1 + count]
+    #     end
+    #     successive_days << days[idx] if count == length - 1
+    #   end
+    #   return successive_days
+    # end
     days
   end
 
-  def get_successive_days(start_d, end_d, duration)
+  def are_successive_days?(start_d, end_d, duration)
     # look through each day in days. if hit a string
     # of length successive days spaced by duration,
     # extract that part and return
