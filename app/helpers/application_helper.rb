@@ -13,9 +13,11 @@ module ApplicationHelper
     DO_REGEX = /(?:use #{PERCENTAGE} of (portfolio|free cash) to (#{ACTION}) (#{TICKER})|(exit))/i
     QUERY_REGEX = /#{COND_REGEX}+#{DO_REGEX}/i
 
-    def initialize(entry_query, exit_query)
+    def initialize(entry_query, exit_query, duration_examined, max_open_trades)
       @entry = generate_trade_hash(entry_query)
       @exit = generate_trade_hash(exit_query)
+      @duration_examined = duration_examined
+      @max_open_trades = max_open_trades
     end
 
 
@@ -77,9 +79,28 @@ module ApplicationHelper
       @entry[:tickers].each do |ticker|
         start_dates += find_ranges(ticker, @entry[:cond_percentage], @entry[:cond_days1], @entry[:cond_days2])
       end
-      start_trade
-      #returns an array of trades in the form [date, Ticker, volume, price]
+      start_trade = {ticker: @entry[:act_ticker], source_of_funds: @entry[:source_of_funds], act_percentage: @entry[:act_percentage]}
+
+      end_dates = []
+      @exit[:tickers].each do |ticker|
+        end_dates += find_ranges(ticker, @exit[:cond_percentage], @exit[:cond_days1], @exit[:cond_days2])
+      end
+
+      if @exit[:exit]
+        start_trade = {ticker: @exit[:act_ticker], exit_all: true}
+      else
+        end_trade = {ticker: @exit[:act_ticker], source_of_funds: @exit[:source_of_funds], act_percentage: @exit[:act_percentage]}
+      end
+
     end
+
+    def select_made_trades(start_dates, end_dates)
+      open_trades = 0
+      trade_dates = (start_dates + end_dates).sort.uniq
+      trade_dates.each do |trade_date|
+
+    end
+
 
 
     # WHEN [AAPL] INCREASES BY .01 IN 1 DAY
