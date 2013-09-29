@@ -162,24 +162,18 @@ module ApplicationHelper
       [entries, exits]
     end
 
-
-
     def get_prices(ticker)
-
-      # WHEN [AAPL] INCREASES BY .01 IN 1 DAY
-      # WHEN [GOOG] INCREASES BY .05 IN 1 WEEK FOR 182 DAYS
-      # =>
-      # when ticker change by increment per duration for length
-      if @stock_data[ticker]
+      if @stock_data[ticker].keys.count > 250 * @duration_examined
         return @stock_data[ticker]
       else
+        @stock_data[ticker] = {}
         yql = Yql::Client.new
         yql.format = "json"
         daily_data = [] #daily prices IPO - now
         res = [0] #temp holder for year's prices
         endDate = DateTime.now
         query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
-        query.select = 'date, Open, High, Low, Volume, Adj_close'
+        query.select = 'date, Open, High, Low, Volume, Adj_Close'
         yql.query = query
         
         @duration_examined.times do
@@ -191,19 +185,27 @@ module ApplicationHelper
             :endDate => "#{endDate.year}-#{endDate.month}-#{endDate.day}" 
           }
           res = JSON.parse(yql.get.show)["query"]["results"]["quote"]
-          daily_data += res
+
+          res.each do |day_data|
+            date = day_data.delete("date")
+            @stock_data[ticker][date] = day_data
+          end
+
           endDate = endDate - 1.year
         end
-        @stock_data[ticker] = daily_data.reverse
       end
+      @stock_data[ticker].sort{ |day1, day2| day1.first <=> day2.first }
     end
 
-    def find_ranges(ticker, change, duration, length = 1)
+ def find_ranges(ticker, change, duration, length = 1)
       days = [] #days that trigger entry signal
-      daily_data = get_prices(ticker)
+      unless @stock_data[ticker].keys.count > 250 * @duration_examined
+        get_prices(ticker)
+      end
+
       decrease = change < 0 ? true : false
       
-      daily_data.each_with_index do |day_data, idx|
+      @stock_data[ticker].each_with_index do |day_data, idx|
         start = day_data
         end_d = daily_data[idx + duration - 1]
         break unless end_d
@@ -217,7 +219,7 @@ module ApplicationHelper
 
       if length > 1
         successive_days = []
-        (days.length - 1).times do |idx|
+        (days.count - 1).times do |idx|
           start = days[idx]
           count = 0
           end_d = days[idx + 1 + count]
@@ -225,8 +227,9 @@ module ApplicationHelper
             count < length
             count += 1
             end_d = days[idx + 1 + count]
-            successive_days << days[idx] if count == length - 1
           end
+          successive_days << days[idx] if count == length - 1
+        end
         return successive_days
       end
       days
@@ -241,6 +244,5 @@ module ApplicationHelper
       return true if end_date - start_date == duration
       false
     end
-  end
   end
 end
