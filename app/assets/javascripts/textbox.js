@@ -14,7 +14,6 @@ $(document).ready(function(){
     var highlightedQuery = "";
     queryArr.forEach(function(el){
       el = el.trim();
-      console.log(el);
       var keywordIndex = KEYWORDS.indexOf(el);
       if (keywordIndex >= 0) {
         highlightedQuery = highlightedQuery + " <span class=" + el + ">" + el + "</span>";
@@ -25,17 +24,36 @@ $(document).ready(function(){
       };
     });
     
-    
-    console.log(highlightedQuery);
-    // queryBox.innerHTML = highlightedQuery;
-    
     $("#highlight").html(highlightedQuery);
+  };
+  
+  var isSymbol = function(str) {
+    return str.toUpperCase() == str;
+  };
+  
+  var highlight2 = function() {
+    var exitBox = document.getElementById("exitBox");
     
-    // queryBox.innerHTML += " ";
-    // debugger
-    // $("#queryBox")[0].focus();
-    
+    var exitText = $(exitBox).text();
+    var exitArr = exitText.split(" ");
 
+    console.log(exitText);
+    console.log(exitArr);
+    
+    var highlightedExit = "";
+    exitArr.forEach(function(el){
+      el = el.trim();
+      var keywordIndex = KEYWORDS.indexOf(el);
+      if (keywordIndex >= 0) {
+        highlightedExit = highlightedExit + " <span class=" + el + ">" + el + "</span>";
+      } else if (isSymbol(el)) {
+        highlightedExit = highlightedExit + " <span class='symbol'>" + el + "</span>";       
+      } else {
+        highlightedExit = highlightedExit + " " + el;
+      };
+    });
+    
+    $("#highlightExit").html(highlightedExit);
   };
   
   var isSymbol = function(str) {
@@ -43,28 +61,33 @@ $(document).ready(function(){
   };
   
   
+
   if (document.getElementById("queryBox")) {
-    $(queryBox).keyup(function(event){
-      if (event.keyCode == 13) {
-        var queryStr = $(queryBox).text();
-        debugger
-        $.ajax({
-          url: "",
-          type: "GET",
-          data: {query: queryStr},
-          success: function(response){
-            // Write your call back here, also fill out the url
-          }
-        });
-      }  
-      else {
-        highlight();
-        console.log("changed");      
-      }
-    });
-  
     highlight();
-    // console.log("ready!");
+    
+    $("#queryBox").keyup(function(event){
+      highlight();
+    });
+    
   };
+
+  if (document.getElementById("exitBox")) {
+    highlight2();
+    
+    $("#exitBox").keyup(function(event){
+      highlight2();
+    });
+    
+  };
+  // };
+  
+  // if (document.getElementById("exitBox")) {
+  //   $(queryBox).keyup(function(event){
+  //     highlight2();
+  //   }
+  // 
+  //   highlight2();
+  // };
+  
   
 });

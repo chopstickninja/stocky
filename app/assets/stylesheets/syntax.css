@@ -1,34 +1,51 @@
 div#queryBox {
   position:absolute;
-  top: 10px;
-  left:5px;
+  top:30px;
+  left:10px;
   opacity: 0;
-  width: 99%;
+  width: 400px;
 }
 
 div#highlight {
   position:absolute;
-  top: 10px;
-  left:5px;
+  top:30px;
+  left:10px;
   border: solid black 1px;
-  width: 99%;
-  height: 30px;
-  padding-top: 5px;
-  padding-left: 5px;
-  background: white;
-  border: 1px solid #cccccc;
+  width: 400px;
+  height: 20px;
 }
 
+div#exitBox {
+  position:absolute;
+  top:60px;
+  left:10px;
+  opacity: 0;
+  width: 400px;
+}
+
+div#highlightExit {
+  position:absolute;
+  top:60px;
+  left:10px;
+  border: solid black 1px;
+  width: 400px;
+  height: 20px;
+}
+
+
+.symbol {
+  color: red;
+}
 
 .when {
   color: blue;
 }
 
-.increases {
+.increase {
   color: green;
 }
 
-.decreases {
+.decrease {
   color: #CC333F;
 }
 
@@ -39,11 +56,6 @@ div#highlight {
 .portfolio {
   color: #00A0B0;
 }
-
-.cash {
-  color: #00A0B0;
-}
-
 
 .for {
   color: #6A4A3C;
