@@ -32,4 +32,20 @@ $(document).foundation();
         }]
 
     });
+    $("#addStrategy").click(function(event) {
+        event.preventDefault();
+        var user_id = parseInt($(event.currentTarget).attr("data-id"));
+        var query = "this is the query";
+        var callback = "this is the callback";
+        var startDate = "06/10/13"
+        $.ajax({
+            url: "/strategies/",
+            type: "POST",
+            data: {"strategy": {"user_id" : user_id, "query" : query, "callback" : callback, "start_date" : startDate } },
+            success: function(response){
+                $("#addStrategy").attr('disabled','disabled');
+                $("#addStrategy").text("Added!");
+        }
+      });
+    });
 });

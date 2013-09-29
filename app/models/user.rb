@@ -9,6 +9,11 @@ class User < ActiveRecord::Base
 
   after_initialize :ensure_session_token
 
+  has_many :strategies,
+    class_name: "Strategy",
+    primary_key: :id,
+    foreign_key: :user_id
+  
   def self.find_by_credentials(username, password)
     user = User.find_by_username(username)
 

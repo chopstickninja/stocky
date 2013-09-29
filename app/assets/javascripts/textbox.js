@@ -5,33 +5,31 @@ $(document).ready(function(){
   var highlight = function() {
     
     var queryBox = document.getElementById("queryBox");
-    
-    var queryText = $(queryBox).text();
-    var queryArr = queryText.split(" ");
+      var queryText = $(queryBox).text();
+      var queryArr = queryText.split(" ");
 
-    console.log(queryText);
-    console.log(queryArr);
-    
-    var highlightedQuery = "";
-    queryArr.forEach(function(el){
-      el = el.trim();
-      console.log(el);
-      var keywordIndex = KEYWORDS.indexOf(el);
-      if (keywordIndex >= 0) {
-        highlightedQuery = highlightedQuery + " <span class=" + el + ">" + el + "</span>";
-      } else if (isSymbol(el)) {
-        highlightedQuery = highlightedQuery + " <span class='symbol'>" + el + "</span>";       
-      } else {
-        highlightedQuery = highlightedQuery + " " + el;
-      };
-    });
-    
-    
-    console.log(highlightedQuery);
-    // queryBox.innerHTML = highlightedQuery;
-    
-    $("#highlight").html(highlightedQuery);
-    
+      console.log(queryText);
+      console.log(queryArr);
+      
+      var highlightedQuery = "";
+      queryArr.forEach(function(el){
+        el = el.trim();
+        console.log(el);
+        var keywordIndex = KEYWORDS.indexOf(el);
+        if (keywordIndex >= 0) {
+          highlightedQuery = highlightedQuery + " <span class=" + el + ">" + el + "</span>";
+        } else if (isSymbol(el)) {
+          highlightedQuery = highlightedQuery + " <span class='symbol'>" + el + "</span>";       
+        } else {
+          highlightedQuery = highlightedQuery + " " + el;
+        };
+      });
+      
+      
+      console.log(highlightedQuery);
+      // queryBox.innerHTML = highlightedQuery;
+      
+      $("#highlight").html(highlightedQuery);
     // queryBox.innerHTML += " ";
     // debugger
     // $("#queryBox")[0].focus();

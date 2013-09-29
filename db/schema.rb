@@ -11,30 +11,21 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-
-ActiveRecord::Schema.define(:version => 20130929140815) do
+ActiveRecord::Schema.define(:version => 20130929175530) do
 
   create_table "strategies", :force => true do |t|
     t.string   "query"
     t.string   "callback"
     t.integer  "user_id"
-    t.date     "start_date"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
+    t.string   "start_date"
   end
-
-  create_table "users", :force => true do |t|
-    t.string   "email"
-    t.string   "username"
-    t.string   "password_digest"
-
-ActiveRecord::Schema.define(:version => 20130929085215) do
 
   create_table "users", :force => true do |t|
     t.string   "username"
     t.string   "password_hashed"
     t.string   "session_token"
-
     t.datetime "created_at",      :null => false
     t.datetime "updated_at",      :null => false
   end

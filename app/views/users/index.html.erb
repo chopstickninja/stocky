@@ -1,72 +1,48 @@
-<nav class="top-bar hide-for-small" style="background-color: #517fa4; height: 50px; ">
-	<ul class="title-area">
-		<!-- Title Area -->
-		<li class="name">
-	  		<h1>
-	    		<a href="#" style="font-size: 24px;">
-	      			Stocktastic
-	    		</a>
-	  		</h1>
-		</li>
-	</ul>
-
-	<section class="top-bar-section" style="left: 0%;">
-		<!-- Right Nav Section -->
-		<ul class="right">
-			<li class=""><a href="#" style="background-color: #517fa4; font-size: 14px;">Documentation</a></li>
-		</ul>
-	</section>
-</nav>
 <div class="row">
 	<div class="large-12">
 		<div class="panel" style="margin-top: 25px; position: relative; height:52px; background: #C3D0EB;">
 			
-			<!-- <div id="highlight"></div>
+			<div id="highlight"></div>
+      <!-- <input type="text" placeholder="Enter your command"> -->
 
-	<div contenteditable="true" id="queryBox">when increase decrease use portfolio for</div> -->
+	<div contenteditable="true" id="queryBox">when increase decrease use portfolio for</div>
 		</div>
 	</div>
 </div>
 <div class="row">
 	<div class="large-12">
+
 		<div class="panel" id="container" style="background: #C3D0EB;"></div>
+    </div>
 			<div class="panel" style="background: #C3D0EB;">
+        <a href="#" class="small button large-3" style="float:right;" id="addStrategy" data-id="<%= current_user.id %>">Add to Portfolio!</a>
 		<table style="width: 100%;">
   <thead>
     <tr>
       <th>Date</th>
       <th>Price</th>
       <th>Volume</th>
-      <th>P/L</th>
+      <th>Portfolio Value</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <td>09/28/13</td>
       <td>&#36;475.13</td>
-      <td>09/28/13</td>
-      <td>&#36;481.53</td>
-      <td>3 Days</td>
-      <td>10,000</td>
-      <td>+ &#36;30.00</td>
+      <td>100</td>
+      <td>&#36;8500.32</td>
     </tr>
         <tr>
       <td>09/28/13</td>
       <td>&#36;475.13</td>
-      <td>09/28/13</td>
-      <td>&#36;481.53</td>
-      <td>3 Days</td>
-      <td>10,000</td>
-      <td>+ &#36;30.00</td>
+      <td>100</td>
+      <td>&#36;5666.32</td>
     </tr>
         <tr>
       <td>09/28/13</td>
       <td>&#36;475.13</td>
-      <td>09/28/13</td>
-      <td>&#36;481.53</td>
-      <td>3 Days</td>
-      <td>10,000</td>
-      <td>+ &#36;30.00</td>
+      <td>-100</td>
+      <td>&#36;8602.34</td>
     </tr>
   </tbody>
 </table>
