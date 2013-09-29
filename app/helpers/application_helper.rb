@@ -108,34 +108,38 @@ module ApplicationHelper
     # =>
     # when ticker change by increment per duration for length
 
-  def get_prices(ticker, duration_examined)
-    yql = Yql::Client.new
-    yql.format = "json"
-    daily_data = [] #daily prices IPO - now
-    res = [0] #temp holder for year's prices
-    endDate = DateTime.now
-    query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
-    query.select = 'date, Open, High, Low, Volume, Adj_close'
-    yql.query = query
-    
-    duration_examined.times do
-      break if res.length == 0
-      startDate = endDate - 1.year
-      query.conditions = { 
-        :symbol => ticker, 
-        :startDate => "#{startDate.year}-#{startDate.month}-#{startDate.day}", 
-        :endDate => "#{endDate.year}-#{endDate.month}-#{endDate.day}" 
-      }
-      res = JSON.parse(yql.get.show)["query"]["results"]["quote"]
-      daily_data += res
-      endDate = endDate - 1.year
+  def get_prices(ticker)
+    if @stock_data[ticker]
+      return @stock_data[ticker]
+    else
+      yql = Yql::Client.new
+      yql.format = "json"
+      daily_data = [] #daily prices IPO - now
+      res = [0] #temp holder for year's prices
+      endDate = DateTime.now
+      query = Yql::QueryBuilder.new 'yahoo.finance.historicaldata'
+      query.select = 'date, Open, High, Low, Volume, Adj_close'
+      yql.query = query
+      
+      @duration_examined.times do
+        break if res.length == 0
+        startDate = endDate - 1.year
+        query.conditions = { 
+          :symbol => ticker, 
+          :startDate => "#{startDate.year}-#{startDate.month}-#{startDate.day}", 
+          :endDate => "#{endDate.year}-#{endDate.month}-#{endDate.day}" 
+        }
+        res = JSON.parse(yql.get.show)["query"]["results"]["quote"]
+        daily_data += res
+        endDate = endDate - 1.year
+      end
+      @stock_data[ticker] = daily_data.reverse
     end
-    daily_data.reverse
   end
 
-  def find_ranges(ticker, change, duration, duration_examined, length = 1)
+  def find_ranges(ticker, change, duration, length = 1)
     days = [] #days that trigger entry signal
-    daily_data = get_prices(ticker, duration_examined)
+    daily_data = get_prices(ticker)
     decrease = change < 0 ? true : false
     
     daily_data.each_with_index do |day_data, idx|
@@ -145,23 +149,21 @@ module ApplicationHelper
       max_incr = (end_d["High"].to_f - start["Low"].to_f) / end_d["High"].to_f
       max_decr = (end_d["Low"].to_f - start["High"].to_f) / end_d["Low"].to_f
 
-      if decrease && max_decr <= change ||
-        !decrease && max_incr >= change
-        days << end_d
+      if decrease && max_decr <= change || !decrease && max_incr >= change
+        days << end_d["date"]
       end
     end
 
     if length > 1
       successive_days = []
       (days.length - 1).times do |idx|
-        start = days[idx]["date"]
+        start = days[idx]
         count = 0
-        end_d = days[idx + 1 + count]["date"]
+        end_d = days[idx + 1 + count]
         while self.get_successive_days(start, end_d, duration) &&
           count < length
           count += 1
-          end_d = days[idx + 1 + count]["date"]
-        end
+          end_d = days[idx + 1 + count]
         successive_days << days[idx] if count == length - 1
       end
       return successive_days
