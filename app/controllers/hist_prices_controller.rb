@@ -1,0 +1,2 @@
+class HistPricesController < ApplicationController
+end

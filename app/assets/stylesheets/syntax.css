@@ -24,11 +24,11 @@ div#highlight {
   color: blue;
 }
 
-.increase {
+.increases {
   color: green;
 }
 
-.decrease {
+.decreases {
   color: #CC333F;
 }
 
@@ -39,6 +39,11 @@ div#highlight {
 .portfolio {
   color: #00A0B0;
 }
+
+.cash {
+  color: #00A0B0;
+}
+
 
 .for {
   color: #6A4A3C;

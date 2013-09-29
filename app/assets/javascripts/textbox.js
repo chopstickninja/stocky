@@ -1,6 +1,6 @@
 $(document).ready(function(){
     
-  KEYWORDS = ["when", "increase", "decrease", "use", "portfolio", "for"];
+  KEYWORDS = ["when", "increases", "decreases", "use", "portfolio", "for", "cash"];
   
   var highlight = function() {
     
