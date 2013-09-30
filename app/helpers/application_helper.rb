@@ -5,6 +5,7 @@ require 'debugger'
 module ApplicationHelper
 
   class Parser
+    attr_reader :stock_data
     TICKER = /[A-Z]{1,4}/i
     CHANGE = /increases|decreases/i
     PERCENTAGE = /([0-9]+)%/i
