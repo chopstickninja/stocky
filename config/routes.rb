@@ -8,5 +8,5 @@ Stocky::Application.routes.draw do
   resources :algo_positions, :only => [:index]
   resources :hist_prices, :only => [:index]
 
-  resources :algorithms, :only => [:create, :show]
+  resources :algorithms, :only => [:index, :show, :create]
 end

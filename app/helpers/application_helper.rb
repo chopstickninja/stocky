@@ -87,7 +87,6 @@ module ApplicationHelper
         end_trade = {ticker: @exit[:act_ticker], source_of_funds: @exit[:source_of_funds], act_percentage: @exit[:act_percentage]}
         trade_dates = make_trades(select_made_trades(start_dates, end_dates), start_trade, end_trade)
       end
-      debugger
       trade_dates.first.each_with_index do |trade_date, idx|
         child = trade_data[idx] = {}
         child["action"] = "buy"

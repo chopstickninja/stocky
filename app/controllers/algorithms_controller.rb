@@ -1,20 +1,24 @@
 class AlgorithmsController < ApplicationController
-  respond_to :json, :only => [:create, :show]
+  respond_to :json, :only => [:create, :index, :show]
 
   def create
     # params: {query => "...", callback => "..."}
-    parser = Parser.new(params[:query], params[:callback], params[:duration_examined],params[:max_open_trades])
+    p params[:strategy]
+    p params[:callback]
+    parser = Parser.new(params[:query], params[:callback], params[:duration_examined].to_i,params[:max_open_trades].to_i)
     trades = parser.execute_query
     @algorithms = []
     trades.each do |idx, trade|
       @algorithms << trade
     end
 
-    render :handlers => [:rabl]
+    p @algorithms
+
+    render "algorithms.rabl"#:handlers => [:rabl]
   end
 
   def show
     # params: {day1, day2}
-    
+
   end
 end
