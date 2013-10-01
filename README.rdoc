@@ -1,4 +1,5 @@
 == Stocktastic
+(Entry at Yahoo Hack Day 2013)
 
 Stocktastic is a light-weight platform made to give the average user the tools needed to compete with the titans of Wall Street.
 
